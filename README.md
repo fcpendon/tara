@@ -1,79 +1,110 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+# Part 1: Tara!
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+Tara is a simple travel SPA designed to provide API-based weather forecasts via [openweathermap.org](https://openweathermap.org/api) and API-based venue searches via [foursquare.com](https://developer.foursquare.com/docs/api/venues/search). Currently, it only supports Japan and 6 of its cities.
 
-## About Laravel
+This project is made using:
+- Laravel
+- MySQL
+- Vue.js
+- Bootstrap 4
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Dev Notes
+UI/UX is sufficiently responsive, text is always readable, and moving between landscape and portrait modes maintain the same look and feel. Graphics are clean, colorful, and pleasing to the eyes. A bit of country and city trivia are provided as well as 5-day weather forecast. Venue search is helpful but unfortunately, most results have addresses which are in Japanese. Overall, this makes the app look easy to use and is fairly useful for travelling.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Code implementation applies PSR-1 and PSR-12, making code readable and understandable. Classes and components are well-structured and appropriately named. Validation is also provided in the back-end for additional data integrity. Since I'm still new to Vue.js, front-end implementation is a bit basic and hard-coded.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Setting Up
+Once this repository is cloned, follow these steps:
+1. Prepare .env.
+```
+APP_NAME="Tara!"
+APP_ENV=local
+APP_KEY=<required>
+APP_DEBUG=true
+APP_URL=<required>
 
-## Learning Laravel
+LOG_CHANNEL=stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+DB_CONNECTION=<required>
+DB_HOST=<required>
+DB_PORT=<required>
+DB_DATABASE=<required>
+DB_USERNAME=<required>
+DB_PASSWORD=<required>
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+FOURSQUARE_CLIENT_ID=<required>
+FOURSQUARE_CLIENT_SECRET=<required>
+OPENWEATHERMAP_APP_ID=<required>
+```
+2. Run `composer update` for dependencies.
+3. Run `npm install` for front-end libraries.
+4. Run `php artisan migrate` for tables.
+5. Import SQL dump located in *database/tara.sql*.
 
-## Laravel Sponsors
+## References
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Photos and words were taken from [japan-guide.com](https://www.japan-guide.com/list/e1003.html) and Wikipedia.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
+# Part 2: SQL
 
-## Contributing
+### A
+```sql
+SELECT
+    CONCAT('T', LPAD(REPLACE(t.id, ',', ''), 11, '0')) AS ID,
+nickname AS Nickname,
+    CASE
+        WHEN status = 0 THEN 'Discontinued'
+        WHEN status = 1 THEN 'Active'
+        WHEN status = 2 THEN 'Deactivated'
+    END AS Status,
+    GROUP_CONCAT(
+        CASE
+            WHEN role = 1 THEN 'Trainer'
+            WHEN role = 2 THEN 'Assessor'
+            WHEN role = 3 THEN 'Staff'
+        END
+    SEPARATOR '/') AS Roles
+FROM trn_teacher t
+LEFT JOIN trn_teacher_role r ON t.id = r.teacher_id
+GROUP BY t.id
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# tara
+### B
+```mysql
+SELECT
+    REPLACE(t.id, ',', '') AS ID,
+    t.nickname AS Nickname,
+    IFNULL(Open, 0) AS Open,
+    IFNULL(Reserved, 0) AS Reserved,
+    IFNULL(Taught, 0) AS Taught,
+    IFNULL(NoShow, 0) AS 'No Show'
+FROM trn_teacher t
+LEFT JOIN trn_teacher_role r1 ON t.id = r1.teacher_id
+LEFT JOIN trn_teacher_role r2 ON t.id = r2.teacher_id
+LEFT JOIN
+    (SELECT teacher_id, COUNT(1) AS Open
+    FROM trn_time_table
+    WHERE status = 1
+    GROUP BY teacher_id) AS OpenTable
+ON t.id = OpenTable.teacher_id
+LEFT JOIN
+    (SELECT teacher_id, COUNT(1) AS Reserved
+    FROM trn_time_table
+    WHERE status = 3
+    GROUP BY teacher_id) AS ReservedTable
+ON t.id = ReservedTable.teacher_id
+LEFT JOIN
+    (SELECT teacher_id, COUNT(1) AS Taught
+    FROM trn_evaluation
+    WHERE result = 1
+    GROUP BY teacher_id) AS TaughtTable
+ON t.id = TaughtTable.teacher_id
+LEFT JOIN
+    (SELECT teacher_id, COUNT(1) AS NoShow
+    FROM trn_evaluation
+    WHERE result = 2
+    GROUP BY teacher_id) AS NoShowTable
+ON t.id = NoShowTable.teacher_id
+WHERE (t.status = 1 OR t.status = 2)
+AND (r1.role = 1 AND r2.role = 2)
+```
