@@ -12,6 +12,11 @@ class CountryController extends Controller
         return Country::all();
     }
 
+    public function info(Country $country)
+    {
+        return $country;
+    }
+
     public function cities(Country $country)
     {
         return $country->cities;
