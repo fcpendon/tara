@@ -15,4 +15,16 @@ class City extends Model
     {
         return $this->belongsTo('App\Country');
     }
+
+    public function search($params)
+    {
+        $params['city'] = $this->name;
+
+        return SearchLocation::callApi($params);
+    }
+
+    public function getWeatherForecast()
+    {
+        return WeatherForecast::callApi($this->name);
+    }
 }
