@@ -9,14 +9,13 @@
         <title>{{ env('APP_NAME') }}</title>
 
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" type="text/css" href="css/app.css">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
     </head>
 
     <body>
-        <div id="app">
-            <app></app>
-        </div>
-        <script type="text/javascript" src="js/app.js"></script>
+        <div id="app"></div>
+        <script type="text/javascript" src="/js/app.js"></script>
     </body>
 </html>
